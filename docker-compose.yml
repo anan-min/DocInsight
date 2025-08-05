@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "4444:4444"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - RAGFLOW_BASE_URL=${RAGFLOW_BASE_URL:-http://host.docker.internal:9380}
+      - RAGFLOW_API_KEY=${RAGFLOW_API_KEY}
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    restart: unless-stopped
+    networks:
+      - docinsight-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - docinsight-network
+
+networks:
+  docinsight-network:
+    driver: bridge
+
+volumes:
+  backend_data:
+  frontend_node_modules:
