@@ -54,9 +54,10 @@ Before running DocInsight, ensure you have:
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone --recurse-submodules <repository-url>
    cd DocInsight
    ```
+   **Note**: This project uses git submodules for frontend and backend components. The `--recurse-submodules` flag ensures all submodules are cloned automatically.
 
 2. **Create environment file**
    ```bash
